@@ -728,9 +728,22 @@
 
         /* ── RESPONSIVE ── */
         @media (max-width: 768px) {
+            /* Hero — solid blue full-screen on mobile, hide giant offset circles */
+            .hero {
+                background: linear-gradient(160deg, var(--blue-1) 0%, var(--blue-2) 100%);
+                min-height: 100svh;
+                min-height: 100vh;
+            }
+            .hero-circle-1,
+            .hero-circle-2,
+            .hero-circle-3 { display: none; }
+            .hero-nav img.dc-logo { filter: brightness(0) invert(1); }
+            .vlg-badge { color: white; border-color: rgba(255,255,255,0.5); }
+            .hero-eyebrow { color: rgba(255,255,255,0.7); }
+
             /* Global spacing */
             .seo-section-inner { padding: 32px 24px !important; }
-            .hero-nav { padding: 20px 20px; }
+            .hero-nav { padding: 24px 20px; }
             .hero-content { padding: 0 20px 60px; }
             .section { padding: 56px 20px; }
             .section-full { padding: 56px 20px; }
