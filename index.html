@@ -1052,7 +1052,7 @@
     </div>
 
     <!-- Other Work -->
-    <div style="margin-top: 60px;">
+    <div id="other-work" style="margin-top: 60px;">
         <p class="section-eyebrow" style="margin-bottom: 24px;">Other Work</p>
         <div class="projects-grid">
             <div class="project-card" data-url="https://ebtonline.au/">
@@ -1271,7 +1271,7 @@
         window.scrollTo(0, 0);
 
         // Hide elements we don't want in the PDF
-        const hideEls = document.querySelectorAll('.pdf-btn, #get-started, #contact, .cta-section, .footer, #pdf-overlay');
+        const hideEls = document.querySelectorAll('.pdf-btn, #get-started, .section-full.steps-bg, #other-work, .cta-buttons, .footer, #pdf-overlay');
         hideEls.forEach(el => el.style.display = 'none');
 
         try {
