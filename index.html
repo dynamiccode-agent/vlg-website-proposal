@@ -728,17 +728,66 @@
 
         /* ── RESPONSIVE ── */
         @media (max-width: 768px) {
-            .hero-nav, .hero-content { padding-left: 28px; padding-right: 28px; }
-            .section { padding: 60px 28px; }
-            .section-full { padding: 60px 28px; }
-            .pricing-banner { padding: 60px 28px; }
-            .projects-grid { grid-template-columns: 1fr; }
+            /* Global spacing */
+            .seo-section-inner { padding: 32px 24px !important; }
+            .hero-nav { padding: 20px 20px; }
+            .hero-content { padding: 0 20px 60px; }
+            .section { padding: 56px 20px; }
+            .section-full { padding: 56px 20px; }
+            .pricing-banner { padding: 48px 20px; }
+            .cta-section { padding: 56px 20px; }
+            .footer { padding: 28px 20px; flex-direction: column; text-align: center; gap: 12px; }
+            .divider { margin: 0 20px; }
+
+            /* Hero */
+            .hero { min-height: auto; }
+            .hero-title { font-size: 42px; line-height: 1.05; }
+            .hero-subtitle { font-size: 15px; }
+            .hero-cursor { display: none; }
+            .vlg-badge { font-size: 10px; padding: 5px 10px; }
+            .hero-cta { font-size: 14px; padding: 14px 24px; }
+
+            /* Pricing */
+            .pricing-banner h2 { font-size: 26px; }
+            .pricing-cards { flex-direction: column; align-items: stretch; gap: 12px; }
+            .pricing-card-item { min-width: unset; }
+            .pricing-card-item.featured { transform: none; }
             .pricing-arrow { display: none; }
-            .cta-section { padding: 60px 28px; }
-            .footer { padding: 32px 28px; }
-            .divider { margin: 0 28px; }
-            .contact-details { gap: 20px; }
-            #enquiryForm > div[style*="grid-template-columns:1fr 1fr"] { grid-template-columns: 1fr !important; }
+            .pricing-card-item .amount { font-size: 38px; }
+
+            /* Section titles */
+            .section-title { font-size: 28px; }
+            .section-subtitle { font-size: 15px; margin-bottom: 36px; }
+
+            /* Features grid */
+            .features-grid { grid-template-columns: 1fr; gap: 16px; }
+
+            /* SEO breakout */
+            .seo-inner { flex-direction: column !important; gap: 32px !important; }
+            .seo-tiles { grid-template-columns: 1fr 1fr !important; }
+
+            /* Projects */
+            .projects-grid { grid-template-columns: 1fr; gap: 20px; }
+
+            /* How it works */
+            .steps-grid { grid-template-columns: 1fr; gap: 16px; }
+
+            /* CTA */
+            .cta-buttons { flex-direction: column; align-items: stretch; }
+            .btn-primary, .btn-ghost { justify-content: center; width: 100%; }
+            .contact-details { flex-direction: column; align-items: center; gap: 16px; }
+            .cta-section .section-title { font-size: 28px; }
+
+            /* Form */
+            .form-grid-2 { grid-template-columns: 1fr !important; }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title { font-size: 34px; }
+            .section-title { font-size: 24px; }
+            .pricing-card-item .amount { font-size: 32px; }
+            .seo-tiles { grid-template-columns: 1fr !important; }
+            .hero-nav img.dc-logo { height: 16px; }
         }
     </style>
 </head>
@@ -852,13 +901,14 @@
 
 <!-- ── SEO SECTION ── -->
 <section class="section" style="padding-top: 80px; padding-bottom: 80px;">
-    <div style="background: linear-gradient(135deg, #f0f8ff 0%, #e0f0ff 100%); border-radius: 24px; padding: 60px; display: flex; align-items: center; gap: 60px; flex-wrap: wrap; border: 1px solid rgba(10,132,255,0.1);">
+    <div class="seo-section-inner" style="background: linear-gradient(135deg, #f0f8ff 0%, #e0f0ff 100%); border-radius: 24px; padding: 60px; border: 1px solid rgba(10,132,255,0.1);">
+        <div class="seo-inner" style="display: flex; align-items: center; gap: 60px; flex-wrap: wrap;">
         <div style="flex: 1; min-width: 260px;">
             <p class="section-eyebrow">Built to Be Found</p>
             <h2 class="section-title" style="font-size: clamp(28px, 3.5vw, 44px); margin-bottom: 16px;">SEO Optimised<br>From Day One</h2>
             <p style="font-size: 16px; color: var(--muted); line-height: 1.75; max-width: 480px;">Every site we build is structured for search engines from the ground up — proper page hierarchy, fast load times, meta tags, schema markup, and local SEO setup so your business gets found on Google by the customers that matter.</p>
         </div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex: 1; min-width: 260px;">
+        <div class="seo-tiles" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex: 1; min-width: 260px;">
             <div style="background: white; border-radius: 14px; padding: 24px 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.05);">
                 <div style="font-size: 24px; margin-bottom: 10px;">⚡</div>
                 <h4 style="font-family: 'Poppins', sans-serif; font-size: 14px; font-weight: 700; color: var(--black); margin-bottom: 6px;">Fast Load Times</h4>
@@ -880,6 +930,7 @@
                 <p style="font-size: 13px; color: var(--muted); line-height: 1.5;">Clean code, semantic HTML, and best practices baked in from the start.</p>
             </div>
         </div>
+        </div><!-- end seo-inner -->
     </div>
 </section>
 
@@ -996,7 +1047,7 @@
         <p style="text-align:center; color:var(--muted); font-size:16px; line-height:1.7; margin-bottom: 48px;">Fill in your details below and a member of the Dynamic Code team will be in touch to get things moving.</p>
 
         <form id="enquiryForm" onsubmit="submitForm(event)" style="display:grid; gap: 20px;">
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+            <div class="form-grid-2" style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
                 <div class="form-group">
                     <label class="form-label">First Name</label>
                     <input type="text" class="form-input" name="firstName" placeholder="John" required>
@@ -1006,7 +1057,7 @@
                     <input type="text" class="form-input" name="lastName" placeholder="Smith" required>
                 </div>
             </div>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+            <div class="form-grid-2" style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
                 <div class="form-group">
                     <label class="form-label">Email Address</label>
                     <input type="email" class="form-input" name="email" placeholder="john@example.com" required>
