@@ -377,16 +377,81 @@
 
         .project-card {
             background: var(--white);
-            border-radius: 20px;
+            border-radius: 16px;
             overflow: hidden;
-            box-shadow: 0 4px 24px rgba(0,0,0,0.07);
-            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+            transition: transform 0.25s cubic-bezier(0.2,0.8,0.2,1), box-shadow 0.25s;
             border: 1px solid #eef2f7;
+            cursor: pointer;
         }
 
         .project-card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 16px 48px rgba(10,132,255,0.12);
+            transform: translateY(-8px);
+            box-shadow: 0 24px 56px rgba(10,132,255,0.14);
+        }
+
+        .project-browser-bar {
+            background: #f1f3f5;
+            border-bottom: 1px solid #e2e6ea;
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .project-browser-dots {
+            display: flex;
+            gap: 5px;
+            flex-shrink: 0;
+        }
+
+        .project-browser-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .project-browser-dot:nth-child(1) { background: #ff5f57; }
+        .project-browser-dot:nth-child(2) { background: #febc2e; }
+        .project-browser-dot:nth-child(3) { background: #28c840; }
+
+        .project-browser-url {
+            flex: 1;
+            background: #ffffff;
+            border: 1px solid #dde1e6;
+            border-radius: 5px;
+            padding: 3px 10px;
+            font-size: 11px;
+            color: #6b7280;
+            font-family: 'Inter', sans-serif;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .project-screenshot-wrap {
+            overflow: hidden;
+            position: relative;
+        }
+
+        .project-screenshot-wrap::after {
+            content: '👁  Preview Site';
+            position: absolute;
+            bottom: 12px;
+            right: 12px;
+            background: rgba(0,0,0,0.65);
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 6px 14px;
+            border-radius: 100px;
+            opacity: 0;
+            transition: opacity 0.2s;
+            pointer-events: none;
+        }
+
+        .project-card:hover .project-screenshot-wrap::after {
+            opacity: 1;
         }
 
         .project-screenshot {
@@ -395,26 +460,16 @@
             object-fit: cover;
             object-position: top;
             display: block;
-            border-bottom: 3px solid var(--accent);
+            transition: transform 0.4s cubic-bezier(0.2,0.8,0.2,1);
         }
 
-        .project-screenshot-placeholder {
-            width: 100%;
-            aspect-ratio: 16/9;
-            background: linear-gradient(135deg, #e8f4ff 0%, #cce5ff 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-bottom: 3px solid var(--accent);
-            font-family: 'Poppins', sans-serif;
-            font-size: 18px;
-            font-weight: 600;
-            color: var(--accent);
-            opacity: 0.6;
+        .project-card:hover .project-screenshot {
+            transform: scale(1.04);
         }
 
         .project-info {
-            padding: 24px 28px 28px;
+            padding: 20px 24px 24px;
+            border-top: 2px solid var(--accent);
         }
 
         .project-number {
@@ -423,21 +478,21 @@
             letter-spacing: 2px;
             text-transform: uppercase;
             color: var(--accent);
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
 
         .project-name {
             font-family: 'Poppins', sans-serif;
-            font-size: 22px;
+            font-size: 20px;
             font-weight: 700;
             color: var(--black);
         }
 
         .project-desc {
-            font-size: 14px;
+            font-size: 13px;
             color: var(--muted);
             margin-top: 6px;
-            line-height: 1.6;
+            line-height: 1.65;
         }
 
         /* ── HOW IT WORKS ── */
@@ -758,10 +813,7 @@
             pointer-events: none;
         }
 
-        /* Make project cards look clickable */
-        .project-card { cursor: pointer; }
-        .project-card .project-screenshot { transition: opacity 0.2s; }
-        .project-card:hover .project-screenshot { opacity: 0.88; }
+
 
         /* ── FORM ── */
         .form-group {
@@ -967,35 +1019,39 @@
     <p class="section-subtitle">We've built websites for VLG members across the region — here are some of the sites we're proud of.</p>
     <div class="projects-grid">
         <div class="project-card" data-url="https://thegrandhotel.com.au/">
-            <img src="screenshot-grand.jpg" class="project-screenshot" alt="The Grand Hotel website">
+            <div class="project-browser-bar"><div class="project-browser-dots"><div class="project-browser-dot"></div><div class="project-browser-dot"></div><div class="project-browser-dot"></div></div><div class="project-browser-url">thegrandhotel.com.au</div></div>
+            <div class="project-screenshot-wrap"><img src="screenshot-grand.jpg" class="project-screenshot" alt="The Grand Hotel website"></div>
             <div class="project-info">
                 <p class="project-number">Project 01</p>
                 <h3 class="project-name">The Grand Hotel</h3>
-                <p class="project-desc">A complete website overhaul for The Grand Hotel — modern design, online menu integration, and a seamless mobile experience.</p>
+                <p class="project-desc">A complete website overhaul — modern design, online menu integration, and a seamless mobile experience.</p>
             </div>
         </div>
         <div class="project-card" data-url="https://lucindahotel.com.au/">
-            <img src="screenshot-lucinda.jpg" class="project-screenshot" alt="Lucinda Hotel website">
+            <div class="project-browser-bar"><div class="project-browser-dots"><div class="project-browser-dot"></div><div class="project-browser-dot"></div><div class="project-browser-dot"></div></div><div class="project-browser-url">lucindahotel.com.au</div></div>
+            <div class="project-screenshot-wrap"><img src="screenshot-lucinda.jpg" class="project-screenshot" alt="Lucinda Hotel website"></div>
             <div class="project-info">
                 <p class="project-number">Project 02</p>
                 <h3 class="project-name">Lucinda Hotel</h3>
-                <p class="project-desc">A fresh, inviting online presence for Lucinda Hotel — full copywriting, high-res imagery, and a seamless mobile experience.</p>
+                <p class="project-desc">A fresh, inviting online presence — full copywriting, high-res imagery, and a seamless mobile experience.</p>
             </div>
         </div>
         <div class="project-card" data-url="https://blacknugget.com.au/">
-            <img src="screenshot-blacknugget.jpg" class="project-screenshot" alt="Black Nugget website">
+            <div class="project-browser-bar"><div class="project-browser-dots"><div class="project-browser-dot"></div><div class="project-browser-dot"></div><div class="project-browser-dot"></div></div><div class="project-browser-url">blacknugget.com.au</div></div>
+            <div class="project-screenshot-wrap"><img src="screenshot-blacknugget.jpg" class="project-screenshot" alt="Black Nugget website"></div>
             <div class="project-info">
                 <p class="project-number">Project 03</p>
                 <h3 class="project-name">Black Nugget</h3>
-                <p class="project-desc">A bold, character-driven website for Black Nugget — capturing the atmosphere of the venue with great visuals and clear navigation.</p>
+                <p class="project-desc">A bold, character-driven site — capturing the atmosphere of the venue with great visuals and clear navigation.</p>
             </div>
         </div>
         <div class="project-card" data-url="https://thegoondi.com.au/">
-            <img src="screenshot-goondi.jpg" class="project-screenshot" alt="The Goondi website">
+            <div class="project-browser-bar"><div class="project-browser-dots"><div class="project-browser-dot"></div><div class="project-browser-dot"></div><div class="project-browser-dot"></div></div><div class="project-browser-url">thegoondi.com.au</div></div>
+            <div class="project-screenshot-wrap"><img src="screenshot-goondi.jpg" class="project-screenshot" alt="The Goondi website"></div>
             <div class="project-info">
                 <p class="project-number">Project 04</p>
                 <h3 class="project-name">The Goondi</h3>
-                <p class="project-desc">A stunning venue website for The Goondi — showcasing their space, food, and drinks with beautiful imagery and easy navigation.</p>
+                <p class="project-desc">A stunning venue website — showcasing their space, food, and drinks with beautiful imagery and easy navigation.</p>
             </div>
         </div>
     </div>
@@ -1005,19 +1061,21 @@
         <p class="section-eyebrow" style="margin-bottom: 24px;">Other Work</p>
         <div class="projects-grid">
             <div class="project-card" data-url="https://ebtonline.au/">
-                <img src="screenshot-ebt.jpg" class="project-screenshot" alt="EBT Online website">
+                <div class="project-browser-bar"><div class="project-browser-dots"><div class="project-browser-dot"></div><div class="project-browser-dot"></div><div class="project-browser-dot"></div></div><div class="project-browser-url">ebtonline.au</div></div>
+                <div class="project-screenshot-wrap"><img src="screenshot-ebt.jpg" class="project-screenshot" alt="EBT Online website"></div>
                 <div class="project-info">
                     <p class="project-number">Additional Work</p>
                     <h3 class="project-name">EBT Online</h3>
-                    <p class="project-desc">A clean, professional website built to convert visitors into customers — fast load times, clear messaging, and mobile-first design.</p>
+                    <p class="project-desc">A clean, professional website built to convert — fast load times, clear messaging, and mobile-first design.</p>
                 </div>
             </div>
             <div class="project-card" data-url="https://cunniesgummies.com/">
-                <img src="screenshot-cunnies.jpg" class="project-screenshot" alt="Cunnies Gummies website">
+                <div class="project-browser-bar"><div class="project-browser-dots"><div class="project-browser-dot"></div><div class="project-browser-dot"></div><div class="project-browser-dot"></div></div><div class="project-browser-url">cunniesgummies.com</div></div>
+                <div class="project-screenshot-wrap"><img src="screenshot-cunnies.jpg" class="project-screenshot" alt="Cunnies Gummies website"></div>
                 <div class="project-info">
                     <p class="project-number">Additional Work</p>
                     <h3 class="project-name">Cunnies Gummies</h3>
-                    <p class="project-desc">A fun, vibrant e-commerce site for Cunnies Gummies — built for sales, with a standout visual identity and seamless shopping experience.</p>
+                    <p class="project-desc">A fun, vibrant e-commerce site — built for sales with a standout visual identity and seamless shopping experience.</p>
                 </div>
             </div>
         </div>
