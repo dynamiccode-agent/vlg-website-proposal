@@ -681,6 +681,87 @@
             color: rgba(255,255,255,0.35);
         }
 
+        .pdf-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.18);
+            color: rgba(255,255,255,0.8);
+            font-family: 'Poppins', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            padding: 10px 20px;
+            border-radius: 100px;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+            letter-spacing: 0.2px;
+        }
+
+        .pdf-btn:hover {
+            background: rgba(255,255,255,0.16);
+            color: white;
+        }
+
+        /* ── PRINT / PDF STYLES ── */
+        @media print {
+            /* Hide interactive / decorative elements */
+            .hero-cursor,
+            .hero-cta,
+            .pdf-btn,
+            #get-started,
+            #contact,
+            .cta-section,
+            .footer,
+            .divider { display: none !important; }
+
+            /* Reset backgrounds for print */
+            body { background: white !important; }
+
+            .hero {
+                background: linear-gradient(135deg, #2E8BF5 0%, #66C1FF 100%) !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+                min-height: auto !important;
+                page-break-after: always;
+            }
+
+            .hero-circle-1,
+            .hero-circle-2,
+            .hero-circle-3 {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .section,
+            .section-full,
+            .pricing-banner { padding: 40px 48px !important; }
+
+            .pricing-banner,
+            .inclusions-bg,
+            .steps-bg,
+            .seo-section-inner,
+            .feature-card,
+            .project-card,
+            .step-card {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .projects-grid { grid-template-columns: 1fr 1fr !important; }
+            .steps-grid { grid-template-columns: 1fr 1fr !important; }
+            .features-grid { grid-template-columns: 1fr 1fr 1fr !important; }
+
+            .project-card { page-break-inside: avoid; }
+            .feature-card { page-break-inside: avoid; }
+            .step-card { page-break-inside: avoid; }
+
+            /* Page breaks between major sections */
+            .section-full.inclusions-bg { page-break-before: always; }
+            .section.projects-bg { page-break-before: always; }
+            .section-full.steps-bg { page-break-before: always; }
+        }
+
         /* ── DIVIDER ── */
         .divider {
             height: 1px;
@@ -1134,6 +1215,14 @@
 <footer class="footer">
     <img src="dynamiccode-logo.svg" alt="Dynamic Code">
     <p class="footer-text">© 2025 Dynamic Code. VLG Member Exclusive Offer.</p>
+    <button class="pdf-btn" onclick="downloadPDF()" aria-label="Download proposal as PDF">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        Download PDF
+    </button>
 </footer>
 
 <script>
@@ -1187,5 +1276,23 @@
     }
 </script>
 
+<script>
+    function downloadPDF() {
+        const btn = document.querySelector('.pdf-btn');
+        btn.textContent = 'Preparing PDF…';
+        btn.disabled = true;
+
+        // Set document title so the saved PDF filename is meaningful
+        const originalTitle = document.title;
+        document.title = 'VLG Member Website Proposal — Dynamic Code';
+
+        setTimeout(() => {
+            window.print();
+            document.title = originalTitle;
+            btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download PDF`;
+            btn.disabled = false;
+        }, 100);
+    }
+</script>
 </body>
 </html>
