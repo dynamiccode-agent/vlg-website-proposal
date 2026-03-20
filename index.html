@@ -7,6 +7,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -703,63 +705,38 @@
             color: white;
         }
 
-        /* ── PRINT / PDF STYLES ── */
-        @media print {
-            /* Hide interactive / decorative elements */
-            .hero-cursor,
-            .hero-cta,
-            .pdf-btn,
-            #get-started,
-            #contact,
-            .cta-section,
-            .footer,
-            .divider { display: none !important; }
+        /* PDF loading overlay */
+        #pdf-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(10,10,20,0.75);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 16px;
+            backdrop-filter: blur(4px);
+        }
 
-            /* Reset backgrounds for print */
-            body { background: white !important; }
+        #pdf-overlay.active { display: flex; }
 
-            .hero {
-                background: linear-gradient(135deg, #2E8BF5 0%, #66C1FF 100%) !important;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-                min-height: auto !important;
-                page-break-after: always;
-            }
+        .pdf-spinner {
+            width: 44px;
+            height: 44px;
+            border: 4px solid rgba(255,255,255,0.2);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
 
-            .hero-circle-1,
-            .hero-circle-2,
-            .hero-circle-3 {
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-            }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
-            .section,
-            .section-full,
-            .pricing-banner { padding: 40px 48px !important; }
-
-            .pricing-banner,
-            .inclusions-bg,
-            .steps-bg,
-            .seo-section-inner,
-            .feature-card,
-            .project-card,
-            .step-card {
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-            }
-
-            .projects-grid { grid-template-columns: 1fr 1fr !important; }
-            .steps-grid { grid-template-columns: 1fr 1fr !important; }
-            .features-grid { grid-template-columns: 1fr 1fr 1fr !important; }
-
-            .project-card { page-break-inside: avoid; }
-            .feature-card { page-break-inside: avoid; }
-            .step-card { page-break-inside: avoid; }
-
-            /* Page breaks between major sections */
-            .section-full.inclusions-bg { page-break-before: always; }
-            .section.projects-bg { page-break-before: always; }
-            .section-full.steps-bg { page-break-before: always; }
+        .pdf-overlay-text {
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            font-size: 15px;
+            font-weight: 600;
         }
 
         /* ── DIVIDER ── */
@@ -1211,6 +1188,12 @@
     </div>
 </section>
 
+<!-- PDF loading overlay -->
+<div id="pdf-overlay">
+    <div class="pdf-spinner"></div>
+    <p class="pdf-overlay-text">Generating PDF…</p>
+</div>
+
 <!-- ── FOOTER ── -->
 <footer class="footer">
     <img src="dynamiccode-logo.svg" alt="Dynamic Code">
@@ -1277,21 +1260,74 @@
 </script>
 
 <script>
-    function downloadPDF() {
+    async function downloadPDF() {
         const btn = document.querySelector('.pdf-btn');
-        btn.textContent = 'Preparing PDF…';
+        const overlay = document.getElementById('pdf-overlay');
+
         btn.disabled = true;
+        overlay.classList.add('active');
 
-        // Set document title so the saved PDF filename is meaningful
-        const originalTitle = document.title;
-        document.title = 'VLG Member Website Proposal — Dynamic Code';
+        try {
+            const { jsPDF } = window.jspdf;
 
-        setTimeout(() => {
-            window.print();
-            document.title = originalTitle;
-            btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download PDF`;
+            // A4 dimensions in px at 96dpi
+            const pageW = 794;
+            const pageH = 1123;
+
+            // Hide elements we don't want in the PDF
+            const hideEls = document.querySelectorAll('.pdf-btn, #get-started, #contact, .cta-section, .footer, #pdf-overlay');
+            hideEls.forEach(el => el.style.display = 'none');
+
+            // Capture the full page
+            const canvas = await html2canvas(document.body, {
+                scale: 2,
+                useCORS: true,
+                allowTaint: true,
+                logging: false,
+                windowWidth: 1200,
+            });
+
+            // Restore hidden elements
+            hideEls.forEach(el => el.style.display = '');
+
+            const imgData = canvas.toDataURL('image/jpeg', 0.92);
+            const imgW = pageW;
+            const imgH = (canvas.height * pageW) / canvas.width;
+
+            const pdf = new jsPDF({
+                orientation: 'portrait',
+                unit: 'px',
+                format: [pageW, pageH],
+                compress: true,
+            });
+
+            let y = 0;
+            let remaining = imgH;
+            let page = 0;
+
+            while (remaining > 0) {
+                if (page > 0) pdf.addPage();
+
+                // Crop position in the source image
+                const srcY = (page * pageH * canvas.width) / pageW;
+                const sliceH = Math.min(pageH, remaining);
+
+                // Draw image slice
+                pdf.addImage(imgData, 'JPEG', 0, -page * pageH, imgW, imgH);
+
+                remaining -= pageH;
+                page++;
+            }
+
+            pdf.save('VLG-Member-Website-Proposal-Dynamic-Code.pdf');
+
+        } catch (err) {
+            console.error(err);
+            alert('PDF generation failed. Please try again.');
+        } finally {
+            overlay.classList.remove('active');
             btn.disabled = false;
-        }, 100);
+        }
     }
 </script>
 </body>
