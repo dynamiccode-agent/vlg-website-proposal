@@ -1267,64 +1267,59 @@
         btn.disabled = true;
         overlay.classList.add('active');
 
+        // Scroll to top so capture starts from beginning
+        window.scrollTo(0, 0);
+
+        // Hide elements we don't want in the PDF
+        const hideEls = document.querySelectorAll('.pdf-btn, #get-started, #contact, .cta-section, .footer, #pdf-overlay');
+        hideEls.forEach(el => el.style.display = 'none');
+
         try {
             const { jsPDF } = window.jspdf;
 
-            // A4 dimensions in px at 96dpi
-            const pageW = 794;
-            const pageH = 1123;
-
-            // Hide elements we don't want in the PDF
-            const hideEls = document.querySelectorAll('.pdf-btn, #get-started, #contact, .cta-section, .footer, #pdf-overlay');
-            hideEls.forEach(el => el.style.display = 'none');
-
-            // Capture the full page
+            // Capture full page as canvas
             const canvas = await html2canvas(document.body, {
-                scale: 2,
+                scale: 1.5,
                 useCORS: true,
                 allowTaint: true,
                 logging: false,
                 windowWidth: 1200,
+                scrollX: 0,
+                scrollY: 0,
             });
 
-            // Restore hidden elements
-            hideEls.forEach(el => el.style.display = '');
+            const imgData = canvas.toDataURL('image/jpeg', 0.88);
 
-            const imgData = canvas.toDataURL('image/jpeg', 0.92);
-            const imgW = pageW;
-            const imgH = (canvas.height * pageW) / canvas.width;
+            // A4 portrait in mm
+            const pdfW = 210;
+            const pdfH = 297;
 
             const pdf = new jsPDF({
                 orientation: 'portrait',
-                unit: 'px',
-                format: [pageW, pageH],
+                unit: 'mm',
+                format: 'a4',
                 compress: true,
             });
 
-            let y = 0;
-            let remaining = imgH;
-            let page = 0;
+            // Scale image to A4 width, calculate total height in mm
+            const imgWidthMm  = pdfW;
+            const imgHeightMm = (canvas.height / canvas.width) * pdfW;
+            const totalPages  = Math.ceil(imgHeightMm / pdfH);
 
-            while (remaining > 0) {
-                if (page > 0) pdf.addPage();
-
-                // Crop position in the source image
-                const srcY = (page * pageH * canvas.width) / pageW;
-                const sliceH = Math.min(pageH, remaining);
-
-                // Draw image slice
-                pdf.addImage(imgData, 'JPEG', 0, -page * pageH, imgW, imgH);
-
-                remaining -= pageH;
-                page++;
+            for (let i = 0; i < totalPages; i++) {
+                if (i > 0) pdf.addPage();
+                // Offset image upward for each subsequent page
+                pdf.addImage(imgData, 'JPEG', 0, -(i * pdfH), imgWidthMm, imgHeightMm);
             }
 
             pdf.save('VLG-Member-Website-Proposal-Dynamic-Code.pdf');
 
         } catch (err) {
-            console.error(err);
+            console.error('PDF error:', err);
             alert('PDF generation failed. Please try again.');
         } finally {
+            // Restore hidden elements
+            hideEls.forEach(el => el.style.display = '');
             overlay.classList.remove('active');
             btn.disabled = false;
         }
